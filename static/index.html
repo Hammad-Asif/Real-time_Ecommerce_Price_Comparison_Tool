@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scraper</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <style>
+      /* Position the logout button at fixed top-right */
+      #logout-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+      }
+    </style>
+    <!-- First Section - Logos and Heading -->
+    <section class="container mt-4">
+      <div class="row">
+        <!-- First Section - Logo -->
+        <div class="col-md-3 text-center mb-4 mb-md-0">
+          <!-- Add your logo or content here -->
+          <!-- <img
+            src="webscrping.webp"
+            alt="/in/muhammad-zaeem-khan"
+            class="img-fluid"
+            style="max-width: 8rem"
+          /> -->
+        </div>
+
+        <!-- Mid Section - Heading -->
+        <div class="col-md-6 text-center">
+          <h1>Product Scraper</h1>
+        </div>
+
+        <!-- Last Section - Logo -->
+        <div class="col-md-3 text-center">
+          <!-- Add another logo or content here -->
+          <!-- <img
+            src="webscrping.webp"
+            alt="/in/muhammad-zaeem-khan"
+            class="img-fluid"
+            style="max-width: 8rem"
+          /> -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Second and Third Sections - Centered Form and Product Card (Initially Hidden) -->
+    <div class="container mt-4">
+      <div class="row justify-content-center">
+        <!-- Second Section - Centered Form -->
+        <div class="col-md-6">
+          <!-- Form -->
+          <form id="search-form" class="needs-validation">
+            <!-- First Section - Select for Name -->
+            <div class="mb-3">
+              <label for="web-name">Select the search source:</label>
+              <select
+                class="form-select"
+                id="web-name"
+                name="web-name"
+                required
+              >
+                <option value="" disabled selected>Select a website</option>
+                <option value="" disabled>--------------------</option>
+                <option value="url-search">Custom url search</option>
+                <option value="" disabled>--------------------</option>
+                <option value="all-search">All search</option>
+                <option value="" disabled>-------------------</option>
+                <option value="www2.cip1.com">www2.cip1.com</option>
+                <option value="www.ebay.com">www.ebay.com</option>
+                <option value="www.partzilla.com">www.partzilla.com</option>
+                <option value="partsouq.com">partsouq.com</option>
+                <option value="amazon.com">amazon.com</option>
+                <option value="www.aliexpress.com">www.aliexpress.com</option>
+              </select>
+              <div class="invalid-feedback">Please select a website.</div>
+            </div>
+
+            <!-- Second Section - Input for Search Text -->
+            <div class="mb-3">
+              <label for="search-text">Search through unique id / url:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="search-text"
+                name="search-text"
+                placeholder="Enter Search Text"
+                required
+              />
+              <div class="invalid-feedback">Please enter unique id / url.</div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary" id="search-button">
+              Search
+            </button>
+            <!-- Loader -->
+            <div
+              class="spinner-border text-primary mt-2 d-none justify-content-center"
+              id="loader"
+              role="status"
+            >
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </form>
+        </div>
+
+        <!-- Third Section - Product Card (Initially Hidden) -->
+        <div class="col-md-6 d-none" id="product-card-container">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <!-- Product Card -->
+              <div class="card">
+                <img
+                  src="#"
+                  alt="/in/muhammad-zaeem-khan"
+                  class="card-img-top"
+                  id="product-image"
+                  style="
+                    width: auto;
+                    max-width: 15rem;
+                    height: auto;
+                    margin: auto;
+                    max-height: 15rem;
+                  "
+                />
+                <div class="card-body">
+                  <h5 class="card-title" id="product-title"></h5>
+                  <p class="card-text" id="product-description"></p>
+                  <p class="card-text" id="product-price"></p>
+                  <a
+                    href="#"
+                    class="btn btn-primary justify-content-center"
+                    id="product-link"
+                    target="_blank"
+                    >View Product</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Add a new div with a table to display responses for "by-url" -->
+        <div class="col-md-12 d-none" id="url-search-response">
+          <table class="table table-bordered mt-4">
+            <thead>
+              <tr>
+                <th>Website Name</th>
+                <th>Price</th>
+                <th>Title</th>
+                <th>Product Link</th>
+              </tr>
+            </thead>
+            <tbody id="all-search-response">
+              <!-- This table body will be populated with responses from the /by-url API -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add a new div for the logout button -->
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-12 text-start">
+          <button type="button" class="btn btn-danger" id="logout-button">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+    <br />
+
+    <!-- Show a message if JavaScript is disabled -->
+    <noscript>
+      <div class="container">
+        <div class="alert alert-danger mt-4">
+          <strong>Error:</strong> JavaScript is disabled in your browser. Please
+          enable JavaScript to view the content.
+        </div>
+      </div>
+    </noscript>
+
+    <!-- Bootstrap JS (optional, only needed for certain components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Your custom script -->
+    <script>
+      // Check if there is a token in LocalStorage
+      let token = localStorage.getItem("token");
+      if (!token) {
+        // Redirect to login.html if token not found
+        window.location.href = "login.html";
+      }
+      $(document).ready(function () {
+        // Add event listener to the logout button
+        $("#logout-button").on("click", function () {
+          // Clear the token from LocalStorage and redirect to login.html
+          localStorage.removeItem("token");
+          window.location.href = "login.html";
+        });
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+        // Add event listener to the form button
+        $("#search-button").on("click", function (event) {
+          event.preventDefault();
+          $("#product-card-container").addClass("d-none");
+          $("#url-search-response").addClass("d-none");
+          $("#all-search-response").empty().addClass("d-none");
+
+          // Validate the form
+          let form = $("#search-form")[0];
+          if (form.checkValidity() === false) {
+            form.classList.add("was-validated");
+            return;
+          }
+
+          // Show the loader and hide the button when the button is clicked
+          $("#loader").removeClass("d-none");
+          $("#search-button").addClass("d-none");
+
+          // Get the selected option value from the web-name select element
+          let selectedWebName = $("#web-name").val();
+
+          // Get the input value from the search-text input element
+          let searchText = $("#search-text").val();
+
+          if (selectedWebName == "url-search") {
+            $.ajax({
+              url: "http://127.0.0.1:8000/by-url",
+              type: "POST",
+
+              data: {
+                url: searchText,
+              }, // Convert JS object to JSON string
+              // contentType: "application/json", // Set Content-Type header to JSON
+              // dataType: "json",
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+              // withCredentials: true,
+              crossDomain: true,
+              success: function (response) {
+                // Hide the loader and show the button when the response is received
+                $("#loader").addClass("d-none");
+                $("#search-button").removeClass("d-none");
+
+                // Handle the successful response here
+                console.log("successful!", response);
+                if (response.success === true) {
+                  // Show the product card and update its content
+                  $("#product-title").html(
+                    response.prod_title?.replace(/\n/g, "<br/>")
+                  );
+                  $("#product-description").html(
+                    response.prod_discription?.replace(/\n/g, "<br/>")
+                  );
+                  $("#product-price").html(
+                    response.prod_price?.replace(/\n/g, "<br/>")
+                  );
+                  $("#product-link").attr("href", response.product_link);
+                  $("#product-image").attr("src", response.img_link);
+                  $("#product-card-container").removeClass("d-none");
+                } else {
+                  // Add a Bootstrap alert of error to show the error
+                  let errorAlert =
+                    '<div class="alert alert-danger mt-2" role="alert">Error: ' +
+                    response.error +
+                    "</div>";
+                  $("#search-form").append(errorAlert);
+
+                  setTimeout(() => {
+                    $(".alert-danger").remove();
+                  }, 5000);
+                }
+              },
+              error: function (error) {
+                // Hide the loader and show the button when the response is received
+                $("#loader").addClass("d-none");
+                $("#search-button").removeClass("d-none");
+
+                // Handle the error response here
+                console.error("Error in by-url", error);
+                alert(`Error in server! ${error.responseText}`);
+              },
+            });
+          } else if (selectedWebName == "all-search") {
+            let websiteUrls = [
+              "www2.cip1.com",
+              "www.partzilla.com",
+              "www.ebay.com",
+              "partsouq.com",
+              "www.aliexpress.com",
+              "amazon.com",
+            ];
+            let allSearchResponses = [];
+            // Function to make the API call for each URL
+            function callAllSearchApi(websiteName) {
+              $.ajax({
+                url: "http://127.0.0.1:8000/all-search",
+                type: "POST",
+
+                data: JSON.stringify({
+                  id: searchText,
+                  webName: websiteName,
+                }),
+
+                contentType: "application/json",
+                dataType: "json",
+                headers: {
+                  "Access-Control-Allow-Origin": "*",
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+                },
+                crossDomain: true,
+                success: function (response) {
+                  // Handle the successful response here
+
+                  allSearchResponses.push({ ...response, websiteName });
+
+                  if (response.success === false) {
+                    console.error("Error in response", response);
+                  }
+
+                  // Check if all API calls have been completed
+                  if (allSearchResponses.length === websiteUrls.length) {
+                    // Hide the loader and show the button
+                    $("#loader").addClass("d-none");
+                    $("#search-button").removeClass("d-none");
+
+                    // Show the results for each website
+                    for (let i = 0; i < allSearchResponses.length; i++) {
+                      let response = allSearchResponses[i];
+                      // Add code to display results for each website in the UI
+                      if (response.success) {
+                        for (let j = 0; j < response.products.length; j++) {
+                          let product = response.products[j];
+
+                          let tableRow = `
+                                        <tr>
+                                          <td>${response.websiteName}</td>
+                                          <td>${product.prod_price?.replace(
+                                            /\n/g,
+                                            "<br/>"
+                                          )}</td>
+                                          <td>
+                                            <img
+                                              src="${product.img_link}"
+                                              alt="/in/muhammad-zaeem-khan"
+                                              style="width: 100px; height: 100px;"
+                                            />
+                                          </td>
+                                          <td>
+                                            <a href="${
+                                              product.product_link
+                                            }" target="_blank">View Product</a>
+                                          </td>
+                                        </tr>
+                                      `;
+                          $("#url-search-response").removeClass("d-none");
+                          $("#all-search-response")
+                            .removeClass("d-none")
+                            .append(tableRow);
+                        }
+                      }
+                    }
+                  }
+                },
+                error: function (error) {
+                  // Handle the error response here
+                  console.error("Error in all-search", error);
+                  alert(`Error in server! ${error.responseText}`);
+                  // Check if all API calls have been completed
+                  // if (allSearchResponses.length === websiteUrls.length) {
+                  //   // Hide the loader and show the button
+                  //   $("#loader").addClass("d-none");
+                  //   $("#search-button").removeClass("d-none");
+
+                  //   // Show the results for each website
+                  //   for (let i = 0; i < allSearchResponses.length; i++) {
+                  //     let response = allSearchResponses[i];
+                  //     // Add code to display results for each website in the UI
+                  //     // For example, you can create separate product cards for each response.
+                  //   }
+                  // }
+                },
+              });
+            }
+
+            // Call the API for each URL in the websiteUrls array
+            for (let i = 0; i < websiteUrls.length; i++) {
+              callAllSearchApi(websiteUrls[i]);
+            }
+          } else {
+            $.ajax({
+              url: "http://127.0.0.1:8000/by-website-name",
+              type: "POST",
+
+              data: JSON.stringify({
+                id: searchText,
+                webName: selectedWebName,
+              }), // Convert JS object to JSON string
+              contentType: "application/json", // Set Content-Type header to JSON
+              dataType: "json",
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+              // withCredentials: true,
+              crossDomain: true,
+              success: function (response) {
+                // Hide the loader and show the button when the response is received
+                $("#loader").addClass("d-none");
+                $("#search-button").removeClass("d-none");
+
+                // Handle the successful response here
+                console.log("successful!", response);
+
+                if (response.success === true) {
+                  // Show the product card and update its content
+                  $("#product-title").html(
+                    response.prod_title?.replace(/\n/g, "<br/>")
+                  );
+                  $("#product-description").html("");
+                  $("#product-price").html(
+                    response.prod_price?.replace(/\n/g, "<br/>")
+                  );
+                  $("#product-link").attr("href", response.product_link);
+                  $("#product-image").attr("src", response.img_link);
+                  $("#product-card-container").removeClass("d-none");
+                } else {
+                  // Add a Bootstrap alert of error to show the error
+                  let errorAlert =
+                    '<div class="alert alert-danger mt-2" role="alert">Error: ' +
+                    response.error +
+                    "</div>";
+
+                  $("#search-form").append(errorAlert);
+
+                  setTimeout(() => {
+                    $(".alert-danger").remove();
+                  }, 5000);
+                }
+              },
+              error: function (error) {
+                // Hide the loader and show the button when the response is received
+                $("#loader").addClass("d-none");
+                $("#search-button").removeClass("d-none");
+
+                // Handle the error response here
+                console.error("Error in by-website-name", error);
+                alert(`Error in server! ${error.responseText}`);
+              },
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
