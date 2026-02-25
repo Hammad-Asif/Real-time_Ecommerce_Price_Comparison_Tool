@@ -7,7 +7,7 @@ This project is a powerful and efficient Real-time Ecommerce Price Comparison To
     Technical Support
 </h2>
 <p>
-    You can open a support ticket by sending an email here: <a href="mailto:info@recursivedata.com" title="Open Support Ticket">
-        info@recursivedata.com
+    You can open a support ticket by sending an email here: <a href="mailto:hammadcto786.com" title="Open Support Ticket">
+        Hammadcto786@gmail.com
     </a>
 </p>
